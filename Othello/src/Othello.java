@@ -51,7 +51,7 @@ class Othello{
 				} else if ((i == secMidTab && j == firstMidTab) || (i == firstMidTab && j == secMidTab)) {
 					tab[i][j] = " o ";
 				} else {
-					tab[i][j] = " k ";
+					tab[i][j] = "   ";
 				}
 			}
 		}
@@ -76,6 +76,7 @@ class Othello{
 			for (j = 0; j < tab.length; j++) {
 				System.out.print("|" + tab[i][j]);
 			}
+			System.out.print("|");
 		}
 
 	}
