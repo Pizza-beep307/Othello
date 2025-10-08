@@ -1,18 +1,19 @@
-import java.util.ArrayList;
-
 class Othello{
     void principal() {
-		/*
-		String[][] tab = new String[4][4];
-		int i;
-		for (i = 0; i < tab.length - 1; i++) {
-			System.out.print("  "+i);
-		}
-		System.out.print("  "+i);
-		*/
-		displayGame(boardList(8));
+		displayGame(boardList(nbLines()));
+
+		
 		
     }
+    void afficherTableauInt(int[][] tab) {
+        for (int i = 0; i < tab.length; i++) {
+            for (int j = 0; j < tab[i].length; j++) {
+                System.out.print("|" + tab[i][j] + "|\t");
+            }
+            System.out.println();
+        }
+    }
+    
     void afficherTableau(String[][] tab) {
         for (int i = 0; i < tab.length; i++) {
             for (int j = 0; j < tab[i].length; j++) {
@@ -22,15 +23,6 @@ class Othello{
         }
     }
     
-	String gameMode() {
-		String gmode = SimpleInput.getString("Choose the gamemode, solo or duo : ");
-		while  (!(gmode.equalsIgnoreCase("solo")) && !(gmode.equalsIgnoreCase("duo"))) {	
-			System.out.println("Choose between solo or duo");
-			gmode = SimpleInput.getString("Choose the gamemode, solo or duo : ");
-		}
-		return gmode;
-	}
-	
     int nbLines() {
 		int lines = SimpleInput.getInt("Numbers of lines for the board : ");
 		while  (lines < 4 || lines % 2 != 0 || lines > 16) {
@@ -38,6 +30,30 @@ class Othello{
 			lines = SimpleInput.getInt("Numbers of lines for the board : ");
 		}
 		return lines;
+	}
+	
+	int gameMode() {
+		int gmode = SimpleInput.getInt("Choose the gamemode, solo (0) or duo (1): ");
+		while  (!(gmode == 0) && !(gmode == 1)) {	
+			System.out.println("Choose between solo or duo");
+			gmode = SimpleInput.getInt("Choose the gamemode, solo (0) or duo (1): ");
+		}
+		return gmode;
+	}
+	
+	boolean gameStart(int gmode) {
+		boolean start = false;
+		int choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
+		if (gmode == 0) {
+			while  (!(choiceStart == 0) && !(choiceStart == 1)) {	
+				System.out.println("Choose to play first or no");
+				choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
+			}
+		}
+		if (choiceStart == 0) {
+			start = true;
+		}
+		return start;
 	}
 	
 	String[][] boardList(int lines) {
@@ -67,17 +83,53 @@ class Othello{
 		int j;
 		System.out.print("  ");
 		for (i = 0; i < tab.length; i++) {
-			System.out.print("   "+i);
+			if (i>=10) {
+				System.out.print("  "+i);
+			} else {
+				System.out.print("   "+i);
+			}
 		}
 		i = 0;
 		for (i = 0; i < tab.length; i++) {
 			System.out.println();
-			System.out.print(i + "  ");
+			if (i >= 10) {
+				System.out.print(i + " ");
+			} else {
+				System.out.print(i + "  ");
+			}
 			for (j = 0; j < tab.length; j++) {
 				System.out.print("|" + tab[i][j]);
 			}
 			System.out.print("|");
 		}
-
 	}
+
+	
+	int[][] indiceTab(String[][] tab, String x) {
+		int i = 0;
+		int j = 0;
+		int n = 0;
+		int[][] indTab = new int[tab.length][2];
+		while (i < tab.length) {
+			j = 0;
+			while (j < tab.length) {
+				if (tab[i][j] == x) {
+					indTab[n][0] = i;
+					indTab[n][1] = j;
+					n ++;
+				}
+				j ++;
+			}
+			i ++;
+		}
+		return indTab;
+	}
+
+	
 }
+	/*
+	//int[] validCase(String[][] tab) {
+		
+	//}
+//}
+*/
