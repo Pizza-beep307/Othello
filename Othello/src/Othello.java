@@ -127,9 +127,4 @@ class Othello{
 
 	
 }
-	/*
-	//int[] validCase(String[][] tab) {
-		
-	//}
-//}
-*/
+
