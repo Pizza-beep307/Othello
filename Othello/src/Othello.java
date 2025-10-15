@@ -103,7 +103,7 @@ class Othello{
 		}
 	}
 
-	
+	/*
 	int[][] indiceTab(char[][] tab, char x) {
 		int i = 0;
 		int j = 0;
@@ -135,20 +135,27 @@ class Othello{
 		//		topLeft, top, topRight,
 		//		left, case, right
 		//		botLeft, bot, botRight	
-		int[][] validMove = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+		int[][] move = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+		int[][] jsp = new int[tab.length * tab.length];
+		int validCount = -1;
 		for (int i = 0; i < tab.length; i++) {
 			for (int j = 0; j < tab.length; j++) {
 				if (tab[i][j] == ' ') {
 					boolean validCase = false; // if we encounter just a space its not a valid case yet
-					for (int k = 0; k < validMove.length; k++) {
-						int dx = validMove[k][0];
-						int dy = validMove[k][1];
+					for (int k = 0; k < move.length; k++) {
+						int dx = move[k][0];
+						int dy = move[k][1];
 						int x = i + dx;
 						int y = j + dy;
-						if (x >= 
 					}
-
-
+					if (x >= 0 && x < tab.length && y >= 0 && y < tab.length && tab[x][y] == opponent) {
+						validCase = true;
+						validCount += 1;
+					}
+				if (validCase) {
+					jsp[validCount] = [
+				
+	*/
 	
 }
 
