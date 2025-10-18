@@ -1,10 +1,14 @@
 class Othello{
     void principal() {
-		displayGame(boardList(nbLines()));
-
 		
+		char[][] ab = boardList(nbLines());
+		int[][] positionsvalides = validCases(ab, 'x');
+		displayGame(ab);
+		System.out.println();
+		afficherTableauInt(positionsvalides);
 		
     }
+    
     void afficherTableauInt(int[][] tab) {
         for (int i = 0; i < tab.length; i++) {
             for (int j = 0; j < tab[i].length; j++) {
@@ -14,7 +18,7 @@ class Othello{
         }
     }
     
-    void afficherTableau(String[][] tab) {
+    void afficherTableau(char[][] tab) {
         for (int i = 0; i < tab.length; i++) {
             for (int j = 0; j < tab[i].length; j++) {
                 System.out.print(tab[i][j] + "\t");
@@ -79,7 +83,6 @@ class Othello{
 	 * @param lines An integer which is the number of lines (from nbLines())
 	 */
 	void displayGame(char[][] tab) {
-		int j;
 		System.out.print("   ");
 		for (int i = 0; i < tab.length; i++) {
 			if ( i>= 10) {
@@ -95,7 +98,7 @@ class Othello{
 			} else {
 				System.out.print(k + "  ");
 			}
-			for (j = 0; j < tab.length; j++) {
+			for (int j = 0; j < tab.length; j++) {
 				System.out.print(" | " + tab[k][j]);
 			
 			}
@@ -123,38 +126,114 @@ class Othello{
 		}
 		return indTab;
 	}
+	*/
 	
-	int[][] validCases(char[][] tab, char player) {
-		char opponent;
-		if (player == 'o') {
-			opponent = 'x';
-		} else { 
-			oppenent = 'o';
-		}
+	int[][] validCases(char[][] board, char player) {
+		char opponent = ennemy(player);
 		//The 2D list validMove associate every single position around our case 
 		//		topLeft, top, topRight,
 		//		left, case, right
 		//		botLeft, bot, botRight	
 		int[][] move = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
-		int[][] jsp = new int[tab.length * tab.length];
-		int validCount = -1;
-		for (int i = 0; i < tab.length; i++) {
-			for (int j = 0; j < tab.length; j++) {
-				if (tab[i][j] == ' ') {
-					boolean validCase = false; // if we encounter just a space its not a valid case yet
+		int[][] temp = new int[board.length * board.length][2];
+		int jspcompt = 0;
+		boolean positionzerovalid = false;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				if (board[i][j] == player) {
 					for (int k = 0; k < move.length; k++) {
 						int dx = move[k][0];
 						int dy = move[k][1];
 						int x = i + dx;
 						int y = j + dy;
+					
+						if (x >= 0 && x < board.length && y >= 0 && y < board.length && board[x][y] == opponent) {
+							int[] deplacement = new int[]{dx, dy};
+							int[] pos = new int[]{x, y};
+							int[] posi = searchCase(board, pos, deplacement, opponent);
+							if (posi[0] == 0 && posi[1] == 0) {
+								positionzerovalid = true;
+							}
+							if (posi[0] > 0 || posi[1] > 0) {
+								temp[jspcompt] = posi;
+								jspcompt += 1;
+							}
+						}
 					}
-					if (x >= 0 && x < tab.length && y >= 0 && y < tab.length && tab[x][y] == opponent) {
-						validCase = true;
-						validCount += 1;
-					}
-				if (validCase) {
-					jsp[validCount] = [
+				}
+			}
+		}
+		// ON FAIT UNE NOUVELLE LISTE 2D AVEC QUE LES TRUC DONT ON A BESOIN
+		if (positionzerovalid) {
+			jspcompt += 1;
+		}
+		int[][] result = new int[jspcompt][2];
+		for (int i = 0; i <= result.length - 1; i++) {
+			result[i][0] = temp[i][0];
+			result[i][1] = temp[i][1];
+		}
+		if (positionzerovalid) {
+			result[result.length][0] = 0;
+			result[result.length][1] = 0;
+		}
+		return result;
+		
+	}			
+	char ennemy(char player) {
+		char opponent;
+		if (player == 'o') {
+			opponent = 'x';
+		} else {
+			opponent = 'o';
+		}
+		return opponent;
 				
+	}
+	/** PENSER A FAIRE UNE FONCTION QUI DETERMINE LENNEMI EN FONCTION DU SYMBOLE DU JOUEUR
+	 * rôle : Cette fonction permet de savoir si une position prise en paramètre est valide 
+	 * en regardant uniquement dans la direction prix en paramètre (en bas droite ou gauche etc...) 
+	 * le plateau
+	 * le joueur, donc l'ennemi aussi
+	 * la position du pion
+	 * La direction
+	 * 
+	 */
+	int[] searchCase (char[][] board, int[] pos, int[] move, char opponent) {
+		char player = ennemy(opponent);
+		//final int MAXLINE = 2 * (board.length * board.length); // We use pythagore theroem to get the diagonal of the board (longest line)
+		//int[][] listPionPasse = new int[MAXLINE][2];
+		int dx = pos[0];
+		int dy = pos[1];
+		// we verify if we are in the board
+		boolean valid = (((dx >= 0) && (dx < board.length)) && ((dy >= 0) && (dy < board.length)));
+		// maybe do while better
+		while ((board[dx][dy] == opponent && board[dx][dy] != ' ') && valid) {
+			// on se déplace uniquement dans le sens ou on a trouvé le pion adverse
+			dx += move[0];
+			dy += move[1];
+			// on vérifie à chaque itération si on est bien toujours dans le plateau
+			valid = (((dx >= 0) && (dx < board.length)) && ((dy >= 0) && (dy < board.length)));
+		}
+		int[] result;
+		if (valid) {
+			result = new int[]{dx, dy}; // y a bien notre pion donc on peut dire que cette position est valide (je ne sais pas encore quoi retourner 
+		} else {
+			result = new int[]{-1, -1};
+		}
+		return result;
+	}
+	/*
+	char[][] botPlay(char[][] board, int[][] validMove, char symbole) {
+		int indexDomMove = (int)(Math.random() * validMove.length);
+		for(int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				if (i == validMove[indexDomMove][0] && j ==  validMove[indexDomMove][1]) {
+					board[i][j] = symbole;
+				}
+			}
+		}
+		return board;
+	}
 	*/
 	
 }
