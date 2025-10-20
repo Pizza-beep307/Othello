@@ -222,6 +222,74 @@ class Othello{
 		}
 		return result;
 	}
+
+	/** Liste de fonction/méthodes pour l'arrêt du jeu */
+	
+	/**
+	 * Indique si le tableau est vide ou rempli
+	 * @param boardList : Tableau du jeu
+	 * @return Boolean, True si tableau remplis, False au contraire
+	 */
+	boolean tabFull(char[][] board){
+		for (int i = 0 ; i < board.length; i++) {
+			for (int j = 0 ; j < board[i].length; j++) {
+				if (board[i][j] == ' ') {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Vérifie si les joueurs peuvent continuer de jouer
+	 * @param board Plateau de jeu
+	 * @return Boolean : True si aucun joueur peut jouer, la partie s'arrête. False si le jeu peut continuer
+	 */
+	boolean canPlay (char [][] board) {
+		int[][] movesX = validCases(board, 'x');
+        int[][] movesO = validCases(board, 'o');
+        
+        if (movesX.length == 0 && movesO.length == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	boolean isGameOver(char[][] board) {
+        return tabFull(board) || canPlay(board);
+    }
+    
+    void winner (char[][] board) {
+		int scoreX = 0;
+		int scoreO = 0;
+		
+		for (int i = 0 ; i < board.length; i++) {
+			for (int j = 0 ; j < board[i].length; j++) {
+				if (board[i][j] == 'x'){
+					scoreX++;
+				} else if (board[i][j] == 'o'){
+					scoreO++;
+				}
+			}
+		}
+		
+		System.out.println("--- Partie Terminée ---");
+		System.out.println("Résultat de la partie : ");
+		System.out.println("Score du pion X : "+ scoreX);
+		System.out.println("Score du pion O : "+ scoreO);
+		
+		if (scoreO > scoreX){
+			System.out.println("Le joueur O gagne la partie !!");
+		} else if (scoreX > scoreO){
+			System.out.println("Le joueur X gagne la partie !!");
+		} else {
+			System.out.println("Égalité, Bien joué à vous deux !!");
+		}
+	}
+
+	
 	/*
 	char[][] botPlay(char[][] board, int[][] validMove, char symbole) {
 		int indexDomMove = (int)(Math.random() * validMove.length);
@@ -237,4 +305,5 @@ class Othello{
 	*/
 	
 }
+
 
