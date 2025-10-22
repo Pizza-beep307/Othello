@@ -42,9 +42,9 @@ class Othello{
 				}
 			}
 			player = ennemy(player);
-			winner(board);
 			// fonction pour vérifier les conditions d'arrêt du jeu
 		}
+		
 		winner(board);
     }
     /** Liste de fonction/méthodes pour l'arrêt du jeu */
@@ -223,19 +223,26 @@ class Othello{
 	 */
 	char gameStart(int gmode) {
 		char player;
-		int choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
+		
 		if (gmode == 0) {
+			int choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
 			while  (!(choiceStart == 0) && !(choiceStart == 1)) {	
 				System.out.println("Choose to play first or no");
 				choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
 			}
-		}
+		
 		if (choiceStart == 0) {
 			player = 'o';
 		} else {
 			player = 'x';
 		}
+			
 		return player;
+	} else {
+		player = 'o';
+		System.out.println("Player o start to play!");
+	}
+	return player;
 	}
 	
 	char[][] boardList(int lines) {
@@ -464,9 +471,5 @@ class Othello{
 		System.out.println("Fin du test -> OK");
 		return true;
 	}
-	
-	
-		
-	
 }
 
