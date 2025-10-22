@@ -12,6 +12,12 @@ class Othello{
 		applyMove(ab, 0, 0, 'o');
 		displayGame(ab);
 		*/
+		
+		// Launch test
+		
+		testBoardList();
+		
+		
 		System.out.println("#####_OTHELLO GAME_#####");
 		int modeChoice = gameMode();
 		int boardLines = nbLines();
@@ -21,7 +27,7 @@ class Othello{
 		System.out.println();
 		char player = gameStart(modeChoice); // faire un random pr savoir qui commence si duo
 		
-		while (!(isFullBoard(board))  ) {
+		while (!isGameOver(board)) {
         
 			// Tour du joueur humain
 			if (player == 'o') {
@@ -36,10 +42,10 @@ class Othello{
 				}
 			}
 			player = ennemy(player);
-
+			winner(board);
 			// fonction pour vérifier les conditions d'arrêt du jeu
 		}
-	
+		winner(board);
     }
     /** Liste de fonction/méthodes pour l'arrêt du jeu */
 	
@@ -382,5 +388,85 @@ class Othello{
 			}
 		}
 	}
+	
+	void testBoardList () {
+		System.out.println("--- Début boardList ---");
+		int nbTest = 0;
+		
+		if (testCasBoardList(4)) {
+			nbTest++;
+		}
+		if (testCasBoardList(8)) {
+			nbTest++;
+		}
+		
+		if (testCasBoardList(16)) {
+			nbTest++;
+		}
+	}
+	
+	/*
+	 * - Vérifie si les 4 centraux sont valide
+	 * - Vérifie la taille
+	 * - Vérifie que les cases sont vides
+	*/
+	boolean testCasBoardList (int lineTest) {
+		System.out.println ("Test de la fonc boardList avec " + lineTest+" en cours...");
+		char[][] boardTest = boardList(lineTest);
+		
+		// Vérifie taille de liste
+		
+		if (boardTest.length != lineTest) {
+			System.out.println("Erreur : Liste de taille incorrect");
+			return false;
+		}
+		
+		if (boardTest[0].length != lineTest) {
+			System.out.println("Erreur : Liste de taille incorrect");
+			return false;
+		}
+		
+		
+	/* * - Vérifie si les 4 centraux sont valide*/	
+	
+		int mid1 = lineTest / 2 - 1;
+		int mid2 = lineTest / 2;
+		
+		if (boardTest[mid1][mid1] != 'x') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		
+		if (boardTest[mid1][mid2] != 'o') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		if (boardTest[mid2][mid1] != 'o') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		if (boardTest[mid2][mid2] != 'x') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		
+		for (int i = 0; i < lineTest; i++) {
+			for (int j = 0; j < lineTest; j++) {
+				boolean Center = (i == mid1 && j == mid1) || (i == mid2 && j == mid2) || (i == mid1 && j == mid2) || (i == mid2 && j == mid1);
+				
+				if (!Center && boardTest[i][j] != ' ') {
+					System.out.println("ERREUR: Case [" + i + "][" + j + "] devrait être vide (' ')");
+					return false;
+				}
+			}
+		}
+		
+		System.out.println("Fin du test -> OK");
+		return true;
+	}
+	
+	
+		
+	
 }
 
