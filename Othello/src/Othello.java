@@ -1,6 +1,6 @@
 class Othello{
     void principal() {
-		
+		/*
 		char[][] ab =  {{' ', 'x', 'x', 'o'},
 						{' ', 'x', 'x', ' '}, 
 						{' ', 'x', 'x', ' ', },
@@ -11,9 +11,101 @@ class Othello{
 		afficherTableauInt(positionsvalides);
 		applyMove(ab, 0, 0, 'o');
 		displayGame(ab);
+		*/
+		System.out.println("#####_OTHELLO GAME_#####");
+		int modeChoice = gameMode();
+		int boardLines = nbLines();
+		char[][] board = boardList(boardLines);
+		// first time displaying the board
+		displayGame(board);
+		System.out.prinln();
+		char player = gameStart(modeChoice); // faire un random pr savoir qui commence si duo
 		
+		while (!(isFullBoard(board))  ) {
+        
+			// Tour du joueur humain
+			if (player == 'o') {
+				playerTurn(board, player);
+			} 
+			// Tour du bot (ou joueur 2 en mode duo)
+			else {
+				if (modeChoice == 0) {
+					botTurn(board, player);
+				} else {
+					playerTurn(board, player);
+				}
+			}
+			player = ennemy(player);
+
+			// fonction pour vérifier les conditions d'arrêt du jeu
+		}
+	
     }
     
+    boolean isFullBoard(char[][] board) {
+		boolean isFull = true;
+		int i = 0;
+		int j = 0;
+		while (i < board.length && isFull) {
+			j = 0;
+			while (j < board[i].length && isFull) {
+				if (board[i][j] == ' ') {
+					isFull = false;
+				}
+				j ++;
+			}
+			i ++;
+		}
+		return isFull;
+	}
+		
+    void playerTurn(char[][] board, char player) {
+		int[][] possibleMoves = validCases(board, player);
+		
+		if (possibleMoves.length > 0) {
+			System.out.println("### Turn of Player " + player + " ###");
+			System.out.println("Valid moves:");
+			afficherTableauInt(possibleMoves);
+			
+			boolean validMove = false;
+			while (!validMove) {
+				int row = SimpleInput.getInt("Enter row: ");
+				int col = SimpleInput.getInt("Enter column: ");
+				
+				int i = 0;
+				while (i < possibleMoves.length && !validMove) {
+					if (possibleMoves[i][0] == row && possibleMoves[i][1] == col) {
+						applyMove(board, row, col, player);
+						validMove = true;
+					}
+					i++;
+				}
+				
+				if (!validMove) {
+					System.out.println("Invalid move! Please choose from the valid positions.");
+				}
+			}
+			
+			displayGame(board);
+			System.out.println();
+		} else {
+			System.out.println("### No valid moves for Player " + player + " ###");
+			// fonction pour gérer le passage de tour
+		}
+	}
+	void botTurn(char[][] board, char player) {
+		int[][] possibleMoves = validCases(board, player);
+		if (possibleMoves.length > 0 ){
+			System.out.println("### Turn of the bot ###");
+			int indexRandomMove = (int)(Math.random() * possibleMoves.length);
+			int row = validMove[indexRandomMove][0];
+			int col = validMove[indexRandomMove][1];
+			applyMove(board, row, col, player);
+			displayGame(board);
+		} else {
+			System.out.println("### No valid moves for the bot ###");
+		}
+	}
     void afficherTableauInt(int[][] tab) {
         for (int i = 0; i < tab.length; i++) {
             for (int j = 0; j < tab[i].length; j++) {
@@ -33,10 +125,10 @@ class Othello{
     }
     */
     int nbLines() {
-		int lines = SimpleInput.getInt("Numbers of lines for the board : ");
+		int lines = SimpleInput.getInt("Numbers of rows for the board : ");
 		while  (lines < 4 || lines % 2 != 0 || lines > 16) {
-			System.out.println("Numbers of lines must be even, at least 4 and max 16");
-			lines = SimpleInput.getInt("Numbers of lines for the board : ");
+			System.out.println("Numbers of rows must be even, at least 4 and max 16");
+			lines = SimpleInput.getInt("Numbers of rows for the board : ");
 		}
 		return lines;
 	}
@@ -49,9 +141,12 @@ class Othello{
 		}
 		return gmode;
 	}
-	
-	boolean gameStart(int gmode) {
-		boolean start = false;
+	/**A FAIRE FONCTION TEST SUR CETTE FONCTION, C'EST LA PLUS SIMPLE IMO
+	 * 
+	 * 
+	 */
+	char gameStart(int gmode) {
+		char player;
 		int choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
 		if (gmode == 0) {
 			while  (!(choiceStart == 0) && !(choiceStart == 1)) {	
@@ -60,9 +155,11 @@ class Othello{
 			}
 		}
 		if (choiceStart == 0) {
-			start = true;
+			player = 'o';
+		} else {
+			player = 'x';
 		}
-		return start;
+		return player;
 	}
 	
 	char[][] boardList(int lines) {
@@ -206,6 +303,7 @@ class Othello{
 			}
 			
 			if (hasOpponent && x >= 0 && x < LENGTH && y >= 0 && y < LENGTH && board[x][y] == player) {
+				// We go backward
 				for (int i = 0; i < count; i++) {
 					x -= dx;
 					y -= dy;
@@ -214,24 +312,5 @@ class Othello{
 			}
 		}
 	}
-	
-	/*
-	char[][] applyMove (char[][]board, int x, int y, char player) {
-		char opponent = ennemy(player);
-	*/
-	/*
-	char[][] botPlay(char[][] board, int[][] validMove, char symbole) {
-		int indexDomMove = (int)(Math.random() * validMove.length);
-		for(int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				if (i == validMove[indexDomMove][0] && j ==  validMove[indexDomMove][1]) {
-					board[i][j] = symbole;
-				}
-			}
-		}
-		return board;
-	}
-	*/
-	
 }
 
