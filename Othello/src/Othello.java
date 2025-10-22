@@ -18,7 +18,7 @@ class Othello{
 		char[][] board = boardList(boardLines);
 		// first time displaying the board
 		displayGame(board);
-		System.out.prinln();
+		System.out.println();
 		char player = gameStart(modeChoice); // faire un random pr savoir qui commence si duo
 		
 		while (!(isFullBoard(board))  ) {
@@ -118,6 +118,7 @@ class Othello{
 				}
 			}
 		}
+		return board ;
 	}
 	
     boolean isFullBoard(char[][] board) {
@@ -176,8 +177,8 @@ class Othello{
 		if (possibleMoves.length > 0 ){
 			System.out.println("### Turn of the bot ###");
 			int indexRandomMove = (int)(Math.random() * possibleMoves.length);
-			int row = validMove[indexRandomMove][0];
-			int col = validMove[indexRandomMove][1];
+			int row = possibleMoves[indexRandomMove][0];
+			int col = possibleMoves[indexRandomMove][1];
 			applyMove(board, row, col, player);
 			displayGame(board);
 		} else {
