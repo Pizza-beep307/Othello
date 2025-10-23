@@ -1,32 +1,27 @@
 class Othello{
     void principal() {
-		
-	
-	
+
 		// Launch test
 		
 		testBoardList();
 		
-		
 		System.out.println("#####_OTHELLO GAME_#####");
 		int modeChoice = gameMode();
-		//int boardLines = nbLines();
-		char[][] board = {{' ', ' ', ' ', ' '},
-						  {'x', 'x', 'o', ' '},
-						  {' ', 'x', 'x', ' '},
-						  {'x', ' ', 'x', ' '}};//boardList(boardLines);
+		int boardLines = nbLines();
+		char[][] board = boardList(boardLines);
 		// first time displaying the board
 		displayGame(board);
 		System.out.println();
-		char player = gameStart(modeChoice); // faire un random pr savoir qui commence si duo
+		char player = gameStart(modeChoice);
 		
+		// While Game == Start
 		while (!isGameOver(board)) {
 			int numOfValidPos = validCases(board, player).length;
-			// Tour du joueur humain
+			// Human Player turn
 			if (player == 'o' && numOfValidPos > 0) {
 				playerTurn(board, player);
 			}
-			// Tour du bot (ou joueur 2 en mode duo)
+			// Bot turn or player2 in duo mode
 			else {
 				numOfValidPos = validCases(board, player).length;
 				if (numOfValidPos > 0) {
@@ -38,18 +33,16 @@ class Othello{
 				}
 			}
 			player = ennemy(player);
-			// fonction pour vérifier les conditions d'arrêt du jeu
 		}
-
 		winner(board);
     }
 
-    /** Liste de fonction/méthodes pour l'arrêt du jeu */
+    /** List of functions/methods for stopping the game */
 	
 	/**
-	 * Indique si le tableau est vide ou rempli
-	 * @param boardList : Tableau du jeu
-	 * @return Boolean, True si tableau remplis, False au contraire
+	 * Indicates if the table is empty or filled
+	 * @param board : Table of the game
+	 * @return Boolean, True if boardList filled, False on the contrary
 	 */
 	boolean tabFull (char[][] board) {
 		boolean result = true;
@@ -64,9 +57,10 @@ class Othello{
 	}
 	
 	/**
-	 * Vérifie si les joueurs peuvent continuer de jouer
-	 * @param board Plateau de jeu
-	 * @return Boolean : True si aucun joueur peut jouer, la partie s'arrête. False si le jeu peut continuer
+	 * Check if the actual players can continue playing
+	 * @param board : Table of the game
+	 * @return Boolean : True if nobody can play, else True ⇒ Game End.
+	 * False ⇒ The game can continue
 	 */
 	boolean cannotPlay (char [][] board) {
 		int[][] movesX = validCases(board, 'x');
@@ -78,11 +72,19 @@ class Othello{
 		} 
 		return result;
 	}
-	
+	/**
+	 * Check if the game is still playable
+	 * @param board : Table of the game
+	 * @return Boolean : False if game end, True if game continue to play
+	 */
 	boolean isGameOver(char[][] board) {
         return tabFull(board) || cannotPlay(board);
     }
     
+    /**
+	 * Determines the winner of the game
+	 * @param board : Table of the game
+	 */
     void winner (char[][] board) {
 		int scoreX = 0;
 		int scoreO = 0;
@@ -111,7 +113,11 @@ class Othello{
 		}
 	}
 
-	
+	/**
+	 * Determines if the board game is full
+	 * @param board : Table of the game
+	 * @return Boolean : True if the game isfull, else False
+	 */
     boolean isFullBoard(char[][] board) {
 		boolean isFull = true;
 		int i = 0;
@@ -128,7 +134,12 @@ class Othello{
 		}
 		return isFull;
 	}
-		
+	
+	/**
+	 * Allows the current player to play
+	 * @param board : Table of the game
+	 * @param player : Present player in the game
+	 */
     void playerTurn(char[][] board, char player) {
 		int temp = validCases(board, ennemy(player)).length;
 		if (temp == 0) {
@@ -167,6 +178,12 @@ class Othello{
 			// fonction pour gérer le passage de tour
 		}
 	}
+	
+	/**
+	 * Implement the bot turn with random choices
+	 * @param board : Table of the game
+	 * @param player : Present player in the game
+	 */
 	void botTurn(char[][] board, char player) {
 		int temp = validCases(board, ennemy(player)).length;
 		if (temp == 0) {
@@ -184,6 +201,11 @@ class Othello{
 			System.out.println("### No valid moves for the bot ###");
 		}
 	}
+	
+	/**
+	 * Display Tab
+	 * @param tab : Tab you want to display
+	 */
     void afficherTableauInt(int[][] tab) {
         for (int i = 0; i < tab.length; i++) {
             for (int j = 0; j < tab[i].length; j++) {
@@ -193,6 +215,10 @@ class Othello{
         }
     }
    
+   	/**
+	 * Ask for the number of lines on the board game (board)
+	 * @return lines : Number of line
+	 */
     int nbLines() {
 		int lines = SimpleInput.getInt("Numbers of rows for the board : ");
 		while  (lines < 4 || lines % 2 != 0 || lines > 16) {
@@ -202,6 +228,10 @@ class Othello{
 		return lines;
 	}
 	
+	/**
+	 * Ask the gamemode to player
+	 * @return gmode : The game mode player choose
+	 */
 	int gameMode() {
 		int gmode = SimpleInput.getInt("Choose the gamemode, solo (0) or duo (1): ");
 		while  (!(gmode == 0) && !(gmode == 1)) {	
@@ -210,9 +240,10 @@ class Othello{
 		}
 		return gmode;
 	}
-	/**A FAIRE FONCTION TEST SUR CETTE FONCTION, C'EST LA PLUS SIMPLE IMO
-	 * 
-	 * 
+	
+	/**
+	 * Manages or requests, which begins depending on the game mode
+	 * @return player : player play first
 	 */
 	char gameStart(int gmode) {
 		char player;
@@ -236,6 +267,10 @@ class Othello{
 		return player;
 	}
 	
+	/**
+	 * Ask for the number of lines on the board game (board)
+	 * @return lines : Number of line
+	 */
 	char[][] boardList(int lines) {
 		char[][] tab = new char[lines][lines];
 		int firstMidTab = lines/2 - 1;
@@ -282,7 +317,13 @@ class Othello{
 			System.out.print(" |");
 		}
 	}
-
+	
+	/**
+	 * Determines which box is valid based on the current player
+	 * @param board : Table of the game
+	 * @param player : Current player
+	 * @return result : tab with all possibilites coordinate and for the bot the number of ennemies we see in a row
+	 */
 	int[][] validCases(char[][] board, char player) {
 		char opponent = ennemy(player);
 		final int LENGTH = board.length;
@@ -345,7 +386,13 @@ class Othello{
 			result[i][1] = temp[i][1];
 		}
 		return result;
-	}			
+	}
+	
+	/**
+	 * Determine ennemy of player
+	 * @param player : Current player
+	 * @return opponement : ennemy of the player
+	 */
 	char ennemy(char player) {
 		char opponent;
 		if (player == 'o') {
@@ -357,6 +404,13 @@ class Othello{
 				
 	}
 	
+	/**
+	 * Apply move of a player
+	 * @param board : Table of the game
+	 * @param a : player's x coordinates
+	 * @param b : player's y coordinates
+	 * @param player : Current player
+	 */
 	void applyMove(char[][] board, int a, int b, char player) {
 		char opponent = ennemy(player);
 		final int LENGTH = board.length;
@@ -391,6 +445,9 @@ class Othello{
 		}
 	}
 	
+	/**
+	 * Runs boardList tests for 4, 8, 16
+	 */
 	void testBoardList () {
 		System.out.println("--- Début boardList ---");
 		int nbTest = 0;
@@ -407,10 +464,10 @@ class Othello{
 		}
 	}
 	
-	/*
-	 * - Vérifie si les 4 centraux sont valide
-	 * - Vérifie la taille
-	 * - Vérifie que les cases sont vides
+	/**
+	 * Check if the 4 central pawns are valid. &  Check the length of table & Check if cases (excepted the middle) are empty
+	 * @param lineTest : test for a certain number of line
+	 * @return : True if test are valid, else false
 	*/
 	boolean testCasBoardList (int lineTest) {
 		System.out.println ("Test de la fonc boardList avec " + lineTest+" en cours...");
