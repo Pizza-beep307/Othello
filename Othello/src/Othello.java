@@ -1,18 +1,8 @@
 class Othello{
     void principal() {
-		/*
-		char[][] ab =  {{' ', 'x', 'x', 'o'},
-						{' ', 'x', 'x', ' '}, 
-						{' ', 'x', 'x', ' ', },
-						{'o', ' ', ' ', 'o'}};
-		int[][] positionsvalides = validCases(ab, 'o');
-		displayGame(ab);
-		System.out.println();
-		afficherTableauInt(positionsvalides);
-		applyMove(ab, 0, 0, 'o');
-		displayGame(ab);
-		*/
 		
+	
+	
 		// Launch test
 		
 		testBoardList();
@@ -20,33 +10,40 @@ class Othello{
 		
 		System.out.println("#####_OTHELLO GAME_#####");
 		int modeChoice = gameMode();
-		int boardLines = nbLines();
-		char[][] board = boardList(boardLines);
+		//int boardLines = nbLines();
+		char[][] board = {{' ', ' ', ' ', ' '},
+						  {'x', 'x', 'o', ' '},
+						  {' ', 'x', 'x', ' '},
+						  {'x', ' ', 'x', ' '}};//boardList(boardLines);
 		// first time displaying the board
 		displayGame(board);
 		System.out.println();
 		char player = gameStart(modeChoice); // faire un random pr savoir qui commence si duo
 		
 		while (!isGameOver(board)) {
-        
+			int numOfValidPos = validCases(board, player).length;
 			// Tour du joueur humain
-			if (player == 'o') {
+			if (player == 'o' && numOfValidPos > 0) {
 				playerTurn(board, player);
-			} 
+			}
 			// Tour du bot (ou joueur 2 en mode duo)
 			else {
-				if (modeChoice == 0) {
-					botTurn(board, player);
-				} else {
-					playerTurn(board, player);
+				numOfValidPos = validCases(board, player).length;
+				if (numOfValidPos > 0) {
+					if (modeChoice == 0) {
+						botTurn(board, player);
+					} else {
+						playerTurn(board, player);
+					}
 				}
 			}
 			player = ennemy(player);
 			// fonction pour vérifier les conditions d'arrêt du jeu
 		}
-		
+
 		winner(board);
     }
+
     /** Liste de fonction/méthodes pour l'arrêt du jeu */
 	
 	/**
@@ -54,15 +51,16 @@ class Othello{
 	 * @param boardList : Tableau du jeu
 	 * @return Boolean, True si tableau remplis, False au contraire
 	 */
-	boolean tabFull(char[][] board){
+	boolean tabFull (char[][] board) {
+		boolean result = true;
 		for (int i = 0 ; i < board.length; i++) {
 			for (int j = 0 ; j < board[i].length; j++) {
 				if (board[i][j] == ' ') {
-					return false;
+					result =  false;
 				}
 			}
 		}
-		return true;
+		return result;
 	}
 	
 	/**
@@ -70,19 +68,19 @@ class Othello{
 	 * @param board Plateau de jeu
 	 * @return Boolean : True si aucun joueur peut jouer, la partie s'arrête. False si le jeu peut continuer
 	 */
-	boolean canPlay (char [][] board) {
+	boolean cannotPlay (char [][] board) {
 		int[][] movesX = validCases(board, 'x');
         int[][] movesO = validCases(board, 'o');
+        boolean result = false;
         
         if (movesX.length == 0 && movesO.length == 0) {
-			return true;
-		} else {
-			return false;
-		}
+			result = true;
+		} 
+		return result;
 	}
 	
 	boolean isGameOver(char[][] board) {
-        return tabFull(board) || canPlay(board);
+        return tabFull(board) || cannotPlay(board);
     }
     
     void winner (char[][] board) {
@@ -114,19 +112,6 @@ class Othello{
 	}
 
 	
-	
-	char[][] botPlay(char[][] board, int[][] validMove, char symbole) {
-		int indexDomMove = (int)(Math.random() * validMove.length);
-		for(int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				if (i == validMove[indexDomMove][0] && j ==  validMove[indexDomMove][1]) {
-					board[i][j] = symbole;
-				}
-			}
-		}
-		return board ;
-	}
-	
     boolean isFullBoard(char[][] board) {
 		boolean isFull = true;
 		int i = 0;
@@ -145,6 +130,10 @@ class Othello{
 	}
 		
     void playerTurn(char[][] board, char player) {
+		int temp = validCases(board, ennemy(player)).length;
+		if (temp == 0) {
+			System.out.println("Player " + ennemy(player) + " has no valid moves, he pass the turn");
+		}
 		int[][] possibleMoves = validCases(board, player);
 		
 		if (possibleMoves.length > 0) {
@@ -179,6 +168,10 @@ class Othello{
 		}
 	}
 	void botTurn(char[][] board, char player) {
+		int temp = validCases(board, ennemy(player)).length;
+		if (temp == 0) {
+			System.out.println("Player " + ennemy(player) + " has no valid moves, he pass the turn");
+		}
 		int[][] possibleMoves = validCases(board, player);
 		if (possibleMoves.length > 0 ){
 			System.out.println("### Turn of the bot ###");
@@ -231,18 +224,16 @@ class Othello{
 				choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
 			}
 		
-		if (choiceStart == 0) {
-			player = 'o';
+			if (choiceStart == 0) {
+				player = 'o';
+			} else {
+				player = 'x';
+			}
 		} else {
-			player = 'x';
+			player = 'o';
+			System.out.println("Player o start to play!");
 		}
-			
 		return player;
-	} else {
-		player = 'o';
-		System.out.println("Player o start to play!");
-	}
-	return player;
 	}
 	
 	char[][] boardList(int lines) {
@@ -300,12 +291,13 @@ class Othello{
 		//		left, case, right
 		//		botLeft, bot, botRight	
 		int[][] move = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
-		int[][] temp = new int[LENGTH * LENGTH][2];
+		int[][] temp = new int[LENGTH * LENGTH][3];
 		int count = 0;
 		for (int i = 0; i < LENGTH; i++) {
 			for (int j = 0; j < LENGTH; j++) {
 				if (board[i][j] == player) {
 					for (int k = 0; k < move.length; k++) {
+						int nbOpponent = 0;
 						// we start searching on top left
 						int dx = move[k][0];
 						int dy = move[k][1];
@@ -316,10 +308,12 @@ class Othello{
 						boolean hasOpponent = false; 
 						
 						while (x >= 0 && x < LENGTH && y >= 0 && y < LENGTH && board[x][y] == opponent) {
+							nbOpponent ++;
 							// we circle around our player
 							x += dx; // line
 							y += dy; // column
 							hasOpponent = true; // we found an opponent around our player
+							
 						}
 						
 						if (hasOpponent && x >= 0 && x < LENGTH && y >= 0 && y < LENGTH && board[x][y] == ' ') {
@@ -336,6 +330,7 @@ class Othello{
 							if (alrSeen) {
 								temp[count][0] = x;
 								temp[count][1] = y;
+								temp[count][2] = nbOpponent;
 								count ++;
 							}
 						}
