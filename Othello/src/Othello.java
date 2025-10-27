@@ -220,6 +220,14 @@ class Othello{
 		}
 	}
 	
+	/**
+	 * Implement the bot with intelligent choice, he chooses the movement that turns over the most pawns
+	 * @param board : board of the game
+	 * @param player : Present player in the game
+	 * @param int a : row
+	 * @param int b : col
+	 * @return totalFlips : Number of pawn can be flip
+	 */
 	int countFlips (char[][] board, char player, int a, int b){
 		char opponent = ennemy(player);
 		int length = board.length;
