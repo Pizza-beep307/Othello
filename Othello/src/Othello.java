@@ -52,83 +52,90 @@ class Othello{
 		}
 		winner(board);
     }
-
-    /** List of functions/methods for stopping the game */
-	
-	/**
-	 * Indicates if the table is empty or filled
-	 * @param board : Table of the game
-	 * @return Boolean, True if boardList filled, False on the contrary
-	 */
-	boolean tabFull (char[][] board) {
-		boolean result = true;
-		for (int i = 0 ; i < board.length; i++) {
-			for (int j = 0 ; j < board[i].length; j++) {
-				if (board[i][j] == ' ') {
-					result =  false;
-				}
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * Check if the actual players can continue playing
-	 * @param board : Table of the game
-	 * @return Boolean : True if nobody can play, else True ⇒ Game End.
-	 * False ⇒ The game can continue
-	 */
-	boolean cannotPlay (char [][] board) {
-		int[][] movesX = validCases(board, 'x');
-        int[][] movesO = validCases(board, 'o');
-        boolean result = false;
-        
-        if (movesX.length == 0 && movesO.length == 0) {
-			result = true;
-		} 
-		return result;
-	}
-	/**
-	 * Check if the game is still playable
-	 * @param board : Table of the game
-	 * @return Boolean : False if game end, True if game continue to play
-	 */
-	boolean isGameOver(char[][] board) {
-        return tabFull(board) || cannotPlay(board);
-    }
+    
+    // ------------------------------------ TEST GAME ------------------------------------
     
     /**
-	 * Determines the winner of the game
-	 * @param board : Table of the game
+	 * Runs boardList tests for 4, 8, 16
 	 */
-    void winner (char[][] board) {
-		int scoreX = 0;
-		int scoreO = 0;
+	void testBoardList () {
+		System.out.println("--- Début boardList ---");
+		int nbTest = 0;
 		
-		for (int i = 0 ; i < board.length; i++) {
-			for (int j = 0 ; j < board[i].length; j++) {
-				if (board[i][j] == 'x'){
-					scoreX++;
-				} else if (board[i][j] == 'o'){
-					scoreO++;
+		if (testCasBoardList(4)) {
+			nbTest++;
+		}
+		if (testCasBoardList(8)) {
+			nbTest++;
+		}
+		
+		if (testCasBoardList(16)) {
+			nbTest++;
+		}
+	}
+	
+	/**
+	 * Check if the 4 central pawns are valid. &  Check the length of table & Check if cases (excepted the middle) are empty
+	 * @param lineTest : test for a certain number of line
+	 * @return : True if test are valid, else false
+	*/
+	boolean testCasBoardList (int lineTest) {
+		System.out.println ("Test de la fonc boardList avec " + lineTest+" en cours...");
+		char[][] boardTest = boardList(lineTest);
+		
+		// Vérifie taille de liste
+		
+		if (boardTest.length != lineTest) {
+			System.out.println("Erreur : Liste de taille incorrect");
+			return false;
+		}
+		
+		if (boardTest[0].length != lineTest) {
+			System.out.println("Erreur : Liste de taille incorrect");
+			return false;
+		}
+		
+		
+	/* * - Vérifie si les 4 centraux sont valide*/	
+	
+		int mid1 = lineTest / 2 - 1;
+		int mid2 = lineTest / 2;
+		
+		if (boardTest[mid1][mid1] != 'x') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		
+		if (boardTest[mid1][mid2] != 'o') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		if (boardTest[mid2][mid1] != 'o') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		if (boardTest[mid2][mid2] != 'x') {
+			System.out.println("ERREUR : La position est non correct");
+			return false;
+		}
+		
+		for (int i = 0; i < lineTest; i++) {
+			for (int j = 0; j < lineTest; j++) {
+				boolean Center = (i == mid1 && j == mid1) || (i == mid2 && j == mid2) || (i == mid1 && j == mid2) || (i == mid2 && j == mid1);
+				
+				if (!Center && boardTest[i][j] != ' ') {
+					System.out.println("ERREUR: Case [" + i + "][" + j + "] devrait être vide (' ')");
+					return false;
 				}
 			}
 		}
 		
-		System.out.println("--- Partie Terminée ---");
-		System.out.println("Résultat de la partie : ");
-		System.out.println("Score du pion X : "+ scoreX);
-		System.out.println("Score du pion O : "+ scoreO);
-		
-		if (scoreO > scoreX){
-			System.out.println("Le joueur O gagne la partie !!");
-		} else if (scoreX > scoreO){
-			System.out.println("Le joueur X gagne la partie !!");
-		} else {
-			System.out.println("Égalité, Bien joué à vous deux !!");
-		}
+		System.out.println("Fin du test -> OK");
+		return true;
 	}
-
+	
+	// ------------------------------------ LIBRARY ------------------------------------
+	
 	/**
 	 * Determines if the board game is full
 	 * @param board : Table of the game
@@ -151,6 +158,133 @@ class Othello{
 		return isFull;
 	}
 	
+	/**
+	 * Indicates if the table is empty or filled
+	 * @param board : Table of the game
+	 * @return Boolean, True if boardList filled, False on the contrary
+	 */
+	boolean tabFull (char[][] board) {
+		boolean result = true;
+		for (int i = 0 ; i < board.length; i++) {
+			for (int j = 0 ; j < board[i].length; j++) {
+				if (board[i][j] == ' ') {
+					result =  false;
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Display Tab
+	 * @param tab : Tab you want to display
+	 */
+    void afficherTableauInt(int[][] tab) {
+        for (int i = 0; i < tab.length; i++) {
+            for (int j = 0; j < tab[i].length; j++) {
+                System.out.print("|" + tab[i][j] + "|\t");
+            }
+            System.out.println();
+        }
+    }
+    
+    /**
+	 * Ask for the number of lines on the board game (board)
+	 * @return lines : Number of line
+	 */
+    int nbLines() {
+		int lines = SimpleInput.getInt("Numbers of rows for the board : ");
+		while  (lines < 4 || lines % 2 != 0 || lines > 16) {
+			System.out.println("Numbers of rows must be even, at least 4 and max 16");
+			lines = SimpleInput.getInt("Numbers of rows for the board : ");
+		}
+		return lines;
+	}
+	
+	/**
+	 * Ask for the number of lines on the board game (board)
+	 * @return lines : Number of line
+	 */
+	char[][] boardList(int lines) {
+		char[][] tab = new char[lines][lines];
+		int firstMidTab = lines/2 - 1;
+		int secMidTab = lines/2;
+		for (int i = 0; i < tab.length; i++) {
+			for (int j = 0; j < tab.length; j++) {
+				if ((i == firstMidTab && j == firstMidTab) || (i == secMidTab && j == secMidTab)) {
+					tab[i][j] = 'x';
+				} else if ((i == secMidTab && j == firstMidTab) || (i == firstMidTab && j == secMidTab)) {
+					tab[i][j] = 'o';
+				} else {
+					tab[i][j] = ' ';
+				}
+			}
+		}
+		return tab;
+	}
+	
+	// ------------------------------------ GAME START ------------------------------------
+	
+	/**
+	 * Manages or requests, which begins depending on the game mode
+	 * @return player : player play first
+	 */
+	char gameStart(int gmode) {
+		char player;
+		
+		if (gmode == 0) {
+			int choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
+			while  (!(choiceStart == 0) && !(choiceStart == 1)) {	
+				System.out.println("Choose to play first or no");
+				choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
+			}
+		
+			if (choiceStart == 0) {
+				player = 'o';
+			} else {
+				player = 'x';
+			}
+		} else {
+			player = 'o';
+			System.out.println("Player o start to play!");
+		}
+		return player;
+	}
+	
+	/**
+	 * Ask the gamemode to player
+	 * @return gmode : The game mode player choose
+	 */
+	int gameMode() {
+		int gmode = SimpleInput.getInt("Choose the gamemode, solo (0) or duo (1): ");
+		while  (!(gmode == 0) && !(gmode == 1)) {	
+			System.out.println("Choose between solo or duo");
+			gmode = SimpleInput.getInt("Choose the gamemode, solo (0) or duo (1): ");
+		}
+		return gmode;
+	}
+	
+	// ------------------------------------ GAME ------------------------------------
+	
+	
+	
+	/**
+	 * Check if the actual players can continue playing
+	 * @param board : Table of the game
+	 * @return Boolean : True if nobody can play, else True ⇒ Game End.
+	 * False ⇒ The game can continue
+	 */
+	boolean cannotPlay (char [][] board) {
+		int[][] movesX = validCases(board, 'x');
+        int[][] movesO = validCases(board, 'o');
+        boolean result = false;
+        
+        if (movesX.length == 0 && movesO.length == 0) {
+			result = true;
+		} 
+		return result;
+	}
+
 	/**
 	 * Allows the current player to play
 	 * @param board : Table of the game
@@ -197,6 +331,8 @@ class Othello{
 			// fonction pour gérer le passage de tour
 		}
 	}
+	
+	// -- Bot Part
 	
 	/**
 	 * Implement the bot turn with random choices
@@ -261,7 +397,11 @@ class Othello{
 	}
 				
 				
-	
+	/**
+	 * Implement the bot turn with intelligent choices (choose the movement that turns over the most pawns)
+	 * @param player : Current player
+	 * @return opponement : ennemy of the player
+	 */
 	void botTurnSmart(char[][] board, char player){
 		int valid = validCases(board, ennemy(player)).length;
 		if (valid == 0) {
@@ -292,96 +432,6 @@ class Othello{
 		} else {
 			System.out.println("### No valid moves for the bot ###");
 		}
-	}
-			
-			
-						
-	
-	/**
-	 * Display Tab
-	 * @param tab : Tab you want to display
-	 */
-    void afficherTableauInt(int[][] tab) {
-        for (int i = 0; i < tab.length; i++) {
-            for (int j = 0; j < tab[i].length; j++) {
-                System.out.print("|" + tab[i][j] + "|\t");
-            }
-            System.out.println();
-        }
-    }
-   
-   	/**
-	 * Ask for the number of lines on the board game (board)
-	 * @return lines : Number of line
-	 */
-    int nbLines() {
-		int lines = SimpleInput.getInt("Numbers of rows for the board : ");
-		while  (lines < 4 || lines % 2 != 0 || lines > 16) {
-			System.out.println("Numbers of rows must be even, at least 4 and max 16");
-			lines = SimpleInput.getInt("Numbers of rows for the board : ");
-		}
-		return lines;
-	}
-	
-	/**
-	 * Ask the gamemode to player
-	 * @return gmode : The game mode player choose
-	 */
-	int gameMode() {
-		int gmode = SimpleInput.getInt("Choose the gamemode, solo (0) or duo (1): ");
-		while  (!(gmode == 0) && !(gmode == 1)) {	
-			System.out.println("Choose between solo or duo");
-			gmode = SimpleInput.getInt("Choose the gamemode, solo (0) or duo (1): ");
-		}
-		return gmode;
-	}
-	
-	/**
-	 * Manages or requests, which begins depending on the game mode
-	 * @return player : player play first
-	 */
-	char gameStart(int gmode) {
-		char player;
-		
-		if (gmode == 0) {
-			int choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
-			while  (!(choiceStart == 0) && !(choiceStart == 1)) {	
-				System.out.println("Choose to play first or no");
-				choiceStart = SimpleInput.getInt("Do you want to play first : yes (0) no (1) ");
-			}
-		
-			if (choiceStart == 0) {
-				player = 'o';
-			} else {
-				player = 'x';
-			}
-		} else {
-			player = 'o';
-			System.out.println("Player o start to play!");
-		}
-		return player;
-	}
-	
-	/**
-	 * Ask for the number of lines on the board game (board)
-	 * @return lines : Number of line
-	 */
-	char[][] boardList(int lines) {
-		char[][] tab = new char[lines][lines];
-		int firstMidTab = lines/2 - 1;
-		int secMidTab = lines/2;
-		for (int i = 0; i < tab.length; i++) {
-			for (int j = 0; j < tab.length; j++) {
-				if ((i == firstMidTab && j == firstMidTab) || (i == secMidTab && j == secMidTab)) {
-					tab[i][j] = 'x';
-				} else if ((i == secMidTab && j == firstMidTab) || (i == firstMidTab && j == secMidTab)) {
-					tab[i][j] = 'o';
-				} else {
-					tab[i][j] = ' ';
-				}
-			}
-		}
-		return tab;
 	}
 	
 	/**
@@ -499,6 +549,12 @@ class Othello{
 				
 	}
 	
+	/**
+	 * Determines whether a move is present in the "PossibleMoves" table.
+	 * @param possibleMoves : table of possibleMoves
+	 * @return row
+	 * @return col
+	 */
 	boolean isAValidMoove(int[][] possibleMoves, int row, int col) {
 		for (int i = 0 ; i < possibleMoves.length ; i++) {
 			if (possibleMoves[i][0] == row && possibleMoves[i][1] == col) {
@@ -508,6 +564,11 @@ class Othello{
 		return false;
 	}
 	
+	/**
+	 * displayGame but tells the player where they can play
+	 * @param tab : tab of the game (board)
+	 * @return possibleMoves : tab of possible moves
+	 */
 	void displayValidMoove(char[][] tab, int[][] possibleMoves) {
 		final int LENGTH = tab.length;
 		System.out.print("   ");
@@ -580,83 +641,48 @@ class Othello{
 		}
 	}
 	
+	
+	// GAME OVER :
+	
 	/**
-	 * Runs boardList tests for 4, 8, 16
+	 * Check if the game is still playable
+	 * @param board : Table of the game
+	 * @return Boolean : False if game end, True if game continue to play
 	 */
-	void testBoardList () {
-		System.out.println("--- Début boardList ---");
-		int nbTest = 0;
+	boolean isGameOver(char[][] board) {
+        return tabFull(board) || cannotPlay(board);
+    }
+    
+    /**
+	 * Determines the winner of the game
+	 * @param board : Table of the game
+	 */
+    void winner (char[][] board) {
+		int scoreX = 0;
+		int scoreO = 0;
 		
-		if (testCasBoardList(4)) {
-			nbTest++;
-		}
-		if (testCasBoardList(8)) {
-			nbTest++;
-		}
-		
-		if (testCasBoardList(16)) {
-			nbTest++;
-		}
-	}
-	
-	/**
-	 * Check if the 4 central pawns are valid. &  Check the length of table & Check if cases (excepted the middle) are empty
-	 * @param lineTest : test for a certain number of line
-	 * @return : True if test are valid, else false
-	*/
-	boolean testCasBoardList (int lineTest) {
-		System.out.println ("Test de la fonc boardList avec " + lineTest+" en cours...");
-		char[][] boardTest = boardList(lineTest);
-		
-		// Vérifie taille de liste
-		
-		if (boardTest.length != lineTest) {
-			System.out.println("Erreur : Liste de taille incorrect");
-			return false;
-		}
-		
-		if (boardTest[0].length != lineTest) {
-			System.out.println("Erreur : Liste de taille incorrect");
-			return false;
-		}
-		
-		
-	/* * - Vérifie si les 4 centraux sont valide*/	
-	
-		int mid1 = lineTest / 2 - 1;
-		int mid2 = lineTest / 2;
-		
-		if (boardTest[mid1][mid1] != 'x') {
-			System.out.println("ERREUR : La position est non correct");
-			return false;
-		}
-		
-		if (boardTest[mid1][mid2] != 'o') {
-			System.out.println("ERREUR : La position est non correct");
-			return false;
-		}
-		if (boardTest[mid2][mid1] != 'o') {
-			System.out.println("ERREUR : La position est non correct");
-			return false;
-		}
-		if (boardTest[mid2][mid2] != 'x') {
-			System.out.println("ERREUR : La position est non correct");
-			return false;
-		}
-		
-		for (int i = 0; i < lineTest; i++) {
-			for (int j = 0; j < lineTest; j++) {
-				boolean Center = (i == mid1 && j == mid1) || (i == mid2 && j == mid2) || (i == mid1 && j == mid2) || (i == mid2 && j == mid1);
-				
-				if (!Center && boardTest[i][j] != ' ') {
-					System.out.println("ERREUR: Case [" + i + "][" + j + "] devrait être vide (' ')");
-					return false;
+		for (int i = 0 ; i < board.length; i++) {
+			for (int j = 0 ; j < board[i].length; j++) {
+				if (board[i][j] == 'x'){
+					scoreX++;
+				} else if (board[i][j] == 'o'){
+					scoreO++;
 				}
 			}
 		}
 		
-		System.out.println("Fin du test -> OK");
-		return true;
+		System.out.println("--- Partie Terminée ---");
+		System.out.println("Résultat de la partie : ");
+		System.out.println("Score du pion X : "+ scoreX);
+		System.out.println("Score du pion O : "+ scoreO);
+		
+		if (scoreO > scoreX){
+			System.out.println("Le joueur O gagne la partie !!");
+		} else if (scoreX > scoreO){
+			System.out.println("Le joueur X gagne la partie !!");
+		} else {
+			System.out.println("Égalité, Bien joué à vous deux !!");
+		}
 	}
 }
 
