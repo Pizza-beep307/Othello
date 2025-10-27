@@ -168,6 +168,7 @@ class Othello{
 			System.out.println("### Turn of Player " + player + " ###");
 			System.out.println("");
 			System.out.println("Valid moves:");
+			displayValidMoove(board, possibleMoves);
 			afficherTableauInt(possibleMoves);
 			
 			boolean validMove = false;
@@ -497,6 +498,46 @@ class Othello{
 		return opponent;
 				
 	}
+	
+	boolean isAValidMoove(int[][] possibleMoves, int row, int col) {
+		for (int i = 0 ; i < possibleMoves.length ; i++) {
+			if (possibleMoves[i][0] == row && possibleMoves[i][1] == col) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	void displayValidMoove(char[][] tab, int[][] possibleMoves) {
+		final int LENGTH = tab.length;
+		System.out.print("   ");
+		for (int i = 0; i < LENGTH; i++) {
+			if ( i>= 10) {
+				System.out.print("  "+i);
+			} else {
+				System.out.print("   "+i);
+			}
+		}
+		for (int k = 0; k < LENGTH; k++) {
+			System.out.println();
+			if (k >= 10) {
+				System.out.print(k + " ");
+			} else {
+				System.out.print(k + "  ");
+			}
+			for (int j = 0; j < LENGTH; j++) {
+				char content = tab[k][j];
+				if (content == ' ' && possibleMoves!= null && isAValidMoove(possibleMoves, k, j)){
+					System.out.print(" | " + '.');
+				} else {
+					System.out.print(" | " + content);
+				}
+			}
+			System.out.print(" |");
+		}
+		System.out.println();
+	}
+		
 	
 	/**
 	 * Apply move of a player
