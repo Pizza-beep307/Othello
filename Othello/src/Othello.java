@@ -7,6 +7,18 @@ class Othello{
 		
 		System.out.println("#####_OTHELLO GAME_#####");
 		int modeChoice = gameMode();
+		
+		// FOR SOLO : Bot Selection :
+		int selectBotDifficulty = 0 ; // 0 Random ; 1 Intelligent
+			if (modeChoice==0){
+				selectBotDifficulty = SimpleInput.getInt("-- Select Bot difficulty -- random (0) ou intelligent (1) : ");
+				while  (!(selectBotDifficulty == 0) && !(selectBotDifficulty == 1)) {
+					System.out.println("Invalid Choice. Please choice 0 (for random bot) or 1 (for intelligent bot).");
+					selectBotDifficulty = SimpleInput.getInt("-- Select Bot difficulty -- random (0) ou intelligent (1) : ");
+				}
+			}
+					
+		
 		int boardLines = nbLines();
 		char[][] board = boardList(boardLines);
 		// first time displaying the board
@@ -26,7 +38,11 @@ class Othello{
 				numOfValidPos = validCases(board, player).length;
 				if (numOfValidPos > 0) {
 					if (modeChoice == 0) {
-						botTurn(board, player);
+						if (selectBotDifficulty == 0) {
+							botTurn(board, player);
+						} else {
+							botTurnSmart(board, player);
+						}
 					} else {
 						playerTurn(board, player);
 					}
@@ -148,7 +164,9 @@ class Othello{
 		int[][] possibleMoves = validCases(board, player);
 		
 		if (possibleMoves.length > 0) {
+			System.out.println("");
 			System.out.println("### Turn of Player " + player + " ###");
+			System.out.println("");
 			System.out.println("Valid moves:");
 			afficherTableauInt(possibleMoves);
 			
@@ -201,6 +219,74 @@ class Othello{
 			System.out.println("### No valid moves for the bot ###");
 		}
 	}
+	
+	int countFlips (char[][] board, char player, int a, int b){
+		char opponent = ennemy(player);
+		int length = board.length;
+		int[][] move = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+		int totalFlips = 0;
+		
+		for (int j = 0; j < move.length; j++){
+			int dx = move[j][0];
+			int dy = move[j][1];
+			// we add the previous movement to our actual position
+			int x = a + dx;
+			int y = b + dy;
+			// we initialize this variable to search only when we found an opponent
+			boolean hasOpponent = false; 
+			int count = 0; // count of opponements in this direction
+			
+			while (x >= 0 && x < length && y >= 0 && y < length && board[x][y] == opponent) {
+				// we circle around our player
+				x += dx; //line
+				y += dy; // column
+				count++;
+				hasOpponent = true; // we found an opponent around our player
+			}
+						
+			if (hasOpponent && x >= 0 && x < length && y >= 0 && y < length && board[x][y] == player) {
+				totalFlips += count;
+			}
+		}
+		return totalFlips;
+	}
+				
+				
+	
+	void botTurnSmart(char[][] board, char player){
+		int valid = validCases(board, ennemy(player)).length;
+		if (valid == 0) {
+			System.out.println("Le joueur " + ennemy(player) + " passe son tour.");
+		}
+		
+		int[][] possibleMoves = validCases(board, player);
+		if (possibleMoves.length > 0) {
+			System.out.println("");
+			System.out.println("### Turn of the bot ###");
+			int bestMoveRow = -1;
+			int bestMoveCol = -1;
+			int maxFlips = -1;
+			
+			for (int i = 0; i < possibleMoves.length; i++) {
+				int row = possibleMoves[i][0];
+				int col = possibleMoves[i][1];
+				int currentFlips = countFlips(board, player, row, col);
+				
+				if (currentFlips > maxFlips) {
+					maxFlips = currentFlips;
+					bestMoveRow = row;
+					bestMoveCol = col;
+				}
+			}
+			applyMove(board, bestMoveRow, bestMoveCol, player);
+			displayGame(board);
+		} else {
+			System.out.println("### No valid moves for the bot ###");
+		}
+	}
+			
+			
+						
 	
 	/**
 	 * Display Tab
