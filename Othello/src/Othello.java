@@ -59,7 +59,7 @@ class Othello{
 	 * Runs boardList tests for 4, 8, 16
 	 */
 	void testBoardList () {
-		System.out.println("--- Début boardList ---");
+		System.out.println("--- Start boardList ---");
 		int nbTest = 0;
 		
 		if (testCasBoardList(4)) {
@@ -80,18 +80,18 @@ class Othello{
 	 * @return : True if test are valid, else false
 	*/
 	boolean testCasBoardList (int lineTest) {
-		System.out.println ("Test de la fonc boardList avec " + lineTest+" en cours...");
+		System.out.println ("Test of the boardList fonction with " + lineTest+" en progress...");
 		char[][] boardTest = boardList(lineTest);
 		
 		// Vérifie taille de liste
 		
 		if (boardTest.length != lineTest) {
-			System.out.println("Erreur : Liste de taille incorrect");
+			System.out.println("Error: Incorrect size list");
 			return false;
 		}
 		
 		if (boardTest[0].length != lineTest) {
-			System.out.println("Erreur : Liste de taille incorrect");
+			System.out.println("Error: Incorrect size list");
 			return false;
 		}
 		
@@ -102,20 +102,20 @@ class Othello{
 		int mid2 = lineTest / 2;
 		
 		if (boardTest[mid1][mid1] != 'x') {
-			System.out.println("ERREUR : La position est non correct");
+			System.out.println("ERROR: The position is incorrect");
 			return false;
 		}
 		
 		if (boardTest[mid1][mid2] != 'o') {
-			System.out.println("ERREUR : La position est non correct");
+			System.out.println("ERROR: The position is incorrect");
 			return false;
 		}
 		if (boardTest[mid2][mid1] != 'o') {
-			System.out.println("ERREUR : La position est non correct");
+			System.out.println("ERROR: The position is incorrect");
 			return false;
 		}
 		if (boardTest[mid2][mid2] != 'x') {
-			System.out.println("ERREUR : La position est non correct");
+			System.out.println("ERROR: The position is incorrect");
 			return false;
 		}
 		
@@ -124,13 +124,13 @@ class Othello{
 				boolean Center = (i == mid1 && j == mid1) || (i == mid2 && j == mid2) || (i == mid1 && j == mid2) || (i == mid2 && j == mid1);
 				
 				if (!Center && boardTest[i][j] != ' ') {
-					System.out.println("ERREUR: Case [" + i + "][" + j + "] devrait être vide (' ')");
+					System.out.println("ERREUR: Case [" + i + "][" + j + "] should be empty (' ')");
 					return false;
 				}
 			}
 		}
 		
-		System.out.println("Fin du test -> OK");
+		System.out.println("End of the test -> OK");
 		return true;
 	}
 	
@@ -405,7 +405,7 @@ class Othello{
 	void botTurnSmart(char[][] board, char player){
 		int valid = validCases(board, ennemy(player)).length;
 		if (valid == 0) {
-			System.out.println("Le joueur " + ennemy(player) + " passe son tour.");
+			System.out.println("The player " + ennemy(player) + " skip his turn.");
 		}
 		
 		int[][] possibleMoves = validCases(board, player);
@@ -671,17 +671,17 @@ class Othello{
 			}
 		}
 		
-		System.out.println("--- Partie Terminée ---");
-		System.out.println("Résultat de la partie : ");
-		System.out.println("Score du pion X : "+ scoreX);
-		System.out.println("Score du pion O : "+ scoreO);
+		System.out.println("--- GAME OVER ---");
+		System.out.println("Result of the game : ");
+		System.out.println("X pawn score: "+ scoreX);
+		System.out.println("O pawn score : "+ scoreO);
 		
 		if (scoreO > scoreX){
-			System.out.println("Le joueur O gagne la partie !!");
+			System.out.println("Player O wins the game !!");
 		} else if (scoreX > scoreO){
-			System.out.println("Le joueur X gagne la partie !!");
+			System.out.println("Player X wins the game!!");
 		} else {
-			System.out.println("Égalité, Bien joué à vous deux !!");
+			System.out.println("Equality, well done to both of you!!");
 		}
 	}
 }
