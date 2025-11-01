@@ -83,7 +83,7 @@ class Othello{
 		System.out.println ("Test of the boardList fonction with " + lineTest+" en progress...");
 		char[][] boardTest = boardList(lineTest);
 		
-		// Vérifie taille de liste
+		// Checks list size
 		
 		if (boardTest.length != lineTest) {
 			System.out.println("Error: Incorrect size list");
@@ -685,4 +685,5 @@ class Othello{
 		}
 	}
 }
+
 
